@@ -120,6 +120,28 @@ ax.legend()
 
 
 #%%
+#GRAFICOS PARA EL ANALISIS
+
+#Delta en función de z para distintos radios R
+#Lo hago dejando la posición en y fija y me paro en 4 valores distintos
+#a lo largo de x, entonces tengo 4 pares (y,x). Esto es lo mismo que
+#un análisis radial, dada la simetría de la muestra.
+plt.figure(50)
+x = np.arange(0,7.1,0.02773438)
+f = delta[:,int(N[1]/2),int(N[2]/2)]
+g = delta[:,int(N[1]/2),int(N[2]*79/128)]
+h = delta[:,int(N[1]/2),int(N[2]*173/256)]
+i = delta[:,int(N[1]/2),int(N[2]*47/64)]
+ax = plt.subplot(111)
+ax.plot(x,f,'-',linewidth=2, label=' R = 0 mm')
+ax.plot(x,g,'-',linewidth=2, label=' R = 3 mm')
+ax.plot(x,h,'-',linewidth=2, label=' R = 4.5 mm')
+ax.plot(x,i,'-',linewidth=2, label=' R = 6 mm')
+ax.set_ylim(-12, 7)
+plt.xlabel('z [mm]')
+plt.ylabel('Delta [ppm]')
+plt.title('Delta en función de z')
+ax.legend()
 
 
 #%%
