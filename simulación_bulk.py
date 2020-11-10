@@ -106,14 +106,14 @@ plt.colorbar()
 
 #ver la Delta únicamente en función de z
 plt.figure(40)
-x = np.arange(0,256,1)
+x = np.arange(0,7.1,0.02773438)
 g = delta[:,int(N[1]/2),int(N[2]/2)]
 h = delta[:,100,100]
 ax = plt.subplot(111)
-ax.plot(x,g,'-',linewidth=2, label=' x=y=128 ')
-ax.plot(x,h,'-',linewidth=2, label=' x=y=100 ')
+ax.plot(x,g,'-',linewidth=2, label=' x=y= R=0 ')
+ax.plot(x,h,'-',linewidth=2, label=' x=y= R≈1.84mm')
 ax.set_ylim(-12, 6)
-plt.xlabel('z [voxel]')
+plt.xlabel('z [mm]')
 plt.ylabel('Delta [ppm]')
 plt.title('Delta en función de z')
 ax.legend()
