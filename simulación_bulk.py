@@ -73,61 +73,55 @@ delta = cFS.calculateFieldShift(litio, voxelsize)*1e6
 # N = [256,256,256]
 
 # slice en z
-z_slice = int(N[0]/2)
-plt.figure(2)
-plt.pcolormesh(matriz_3D[z_slice,:,:])
-plt.xlabel('x')
-plt.ylabel('y')
+
+z_slice = int(N[0]/2)-int(nsz/2)
+y_dim = np.arange(0,25.6,0.1)
+x_dim = np.arange(0,25.6,0.1)
+
+
+plt.figure(10)
+plt.pcolormesh(x_dim,y_dim,matriz_3D[z_slice,:,:])
+plt.xlabel('x [mm]')
+plt.ylabel('y [mm]')
+
 
 v = 5
-plt.figure(20)
-plt.pcolormesh(delta[z_slice,:,:], cmap='seismic', vmax=v, vmin=-v)
-# contour son curvas de nivel, probalo:
-#plt.contour(delta[z_slice,:,:], 50, cmap='seismic', vmax=v, vmin=-v)
-plt.xlabel('x')
-plt.ylabel('y')
+plt.figure(11)
+
+plt.pcolormesh(x_dim,y_dim,delta[z_slice,:,:], cmap='seismic', vmax=v, vmin=-v)
+plt.xlabel('x [mm]')
+plt.ylabel('y [mm]')
 plt.colorbar()
 
 # slice en x
+
 x_slice = int(N[2]/2)
-plt.figure(3)
-plt.pcolormesh(matriz_3D[:,:,x_slice])
-plt.xlabel('y')
-plt.ylabel('z')
+z_dim = np.arange(0,7.68,0.03)
+y_dim = np.arange(0,25.6,0.1)
+
+plt.figure(20)
+plt.pcolormesh(y_dim,z_dim,matriz_3D[:,:,x_slice])
+plt.xlabel('y [mm]')
+plt.ylabel('z [mm]')
+
 
 v = 4
-plt.figure(30)
-plt.pcolormesh(delta[:,:,x_slice], cmap='seismic', vmax=v, vmin=-v)
-# contour son curvas de nivel, probalo:
-#plt.contour(delta[:,:,x_slice], 50, cmap='seismic', vmax=v, vmin=-v)
-plt.xlabel('y')
-plt.ylabel('z')
+plt.figure(21)
+plt.pcolormesh(y_dim,z_dim,delta[:,:,x_slice], cmap='seismic', vmax=v, vmin=-v)
+plt.xlabel('y [mm]')
+plt.ylabel('z [mm]')
 plt.colorbar()
-
-#ver la Delta únicamente en función de z
-plt.figure(40)
-x = np.arange(0,7.1,0.02773438)
-g = delta[:,int(N[1]/2),int(N[2]/2)]
-h = delta[:,100,100]
-ax = plt.subplot(111)
-ax.plot(x,g,'-',linewidth=2, label=' x=y= R=0 ')
-ax.plot(x,h,'-',linewidth=2, label=' x=y= R≈1.84mm')
-ax.set_ylim(-12, 6)
-plt.xlabel('z [mm]')
-plt.ylabel('Delta [ppm]')
-plt.title('Delta en función de z')
-ax.legend()
-
 
 #%%
 #GRAFICOS PARA EL ANALISIS
-
 #Delta en función de z para distintos radios R
 #Lo hago dejando la posición en y fija y me paro en 4 valores distintos
 #a lo largo de x, entonces tengo 4 pares (y,x). Esto es lo mismo que
 #un análisis radial, dada la simetría de la muestra.
-plt.figure(50)
-x = np.arange(0,7.1,0.02773438)
+
+
+plt.figure(30)
+x = np.arange(0,7.68,0.03)
 f = delta[:,int(N[1]/2),int(N[2]/2)]
 g = delta[:,int(N[1]/2),int(N[2]*79/128)]
 h = delta[:,int(N[1]/2),int(N[2]*173/256)]
@@ -140,8 +134,47 @@ ax.plot(x,i,'-',linewidth=2, label=' R = 6 mm')
 ax.set_ylim(-12, 7)
 plt.xlabel('z [mm]')
 plt.ylabel('Delta [ppm]')
-plt.title('Delta en función de z')
+plt.title('Delta(z)')
 ax.legend()
+
+#Veo unicamente la variación dentro de la celda para d_in
+plt.figure(31)
+x = np.arange(3.45,4.26,0.03)
+z = np.arange(115,142,1)
+f = delta[z,int(N[1]/2),int(N[2]/2)]
+g = delta[z,int(N[1]/2),int(N[2]*79/128)]
+h = delta[z,int(N[1]/2),int(N[2]*173/256)]
+i = delta[z,int(N[1]/2),int(N[2]*47/64)]
+ax = plt.subplot(111)
+ax.plot(x,f,'-',linewidth=2, label=' R = 0 mm')
+ax.plot(x,g,'-',linewidth=2, label=' R = 3 mm')
+ax.plot(x,h,'-',linewidth=2, label=' R = 4.5 mm')
+ax.plot(x,i,'-',linewidth=2, label=' R = 6 mm')
+ax.set_ylim(-12, 7)
+plt.xlabel('z [mm]')
+plt.ylabel('Delta [ppm]')
+plt.title('Delta(z) dentro de la celda')
+ax.legend()
+
+#Veo unicamente la variación fuera de la celda para d_out
+plt.figure(32)
+x = np.arange(4.17,7.68,0.03)
+z = np.arange(139,256,1)
+f = delta[z,int(N[1]/2),int(N[2]/2)]
+g = delta[z,int(N[1]/2),int(N[2]*79/128)]
+h = delta[z,int(N[1]/2),int(N[2]*173/256)]
+i = delta[z,int(N[1]/2),int(N[2]*47/64)]
+ax = plt.subplot(111)
+ax.plot(x,f,'-',linewidth=2, label=' R = 0 mm')
+ax.plot(x,g,'-',linewidth=2, label=' R = 3 mm')
+ax.plot(x,h,'-',linewidth=2, label=' R = 4.5 mm')
+ax.plot(x,i,'-',linewidth=2, label=' R = 6 mm')
+ax.set_ylim(-12, 7)
+plt.xlabel('z [mm]')
+plt.ylabel('Delta [ppm]')
+plt.title('Delta(z) fuera de la celda')
+ax.legend()
+
 
 
 #%%
