@@ -17,9 +17,9 @@ from SimulationVolume import *
 # y d=12mm. Además quiero FOVz=10*h y FOVxy=2*d
 
 
-N = [256,256,256]
+N = [512,256,256]
 # Sólo por las dimensiones pedidas y el nro elegido de N, tomo este voxelsize
-voxelSize = [0.03, 0.1, 0.1]# mm
+voxelSize = [0.015, 0.1, 0.1]# mm
 volumen = SimulationVolume(voxelSize=voxelSize, N=N)
 matriz_3D = np.zeros(N)
 
@@ -70,7 +70,7 @@ delta = cFS.calculateFieldShift(litio, voxelsize)*1e6
 
 #%% GRAFICOS
 
-# N = [256,256,256]
+# N = [512,256,256]
 
 # slice en z
 
@@ -96,7 +96,7 @@ plt.colorbar()
 # slice en x
 
 x_slice = int(N[2]/2)
-z_dim = np.arange(0,7.68,0.03)
+z_dim = np.arange(0,7.68,0.015)
 y_dim = np.arange(0,25.6,0.1)
 
 plt.figure(20)
@@ -113,7 +113,7 @@ plt.ylabel('z [mm]')
 plt.colorbar()
 
 #%%
-#GRAFICOS PARA EL ANALISIS
+#GRAFICOS PARA VERIFICAR LA EXPORTACIÓN DE DATA DE PERFILES
 #Delta en función de z para distintos radios R
 #Lo hago dejando la posición en y fija y me paro en 4 valores distintos
 #a lo largo de x, entonces tengo 4 pares (y,x). Esto es lo mismo que
@@ -121,196 +121,228 @@ plt.colorbar()
 
 
 plt.figure(30)
-x = np.arange(0,7.68,0.03)
+x = np.arange(0,7.68,0.015)
 f = delta[:,int(N[1]/2),int(N[2]/2)]
 g = delta[:,int(N[1]/2),int(N[2]*79/128)]
 h = delta[:,int(N[1]/2),int(N[2]*173/256)]
-i = delta[:,int(N[1]/2),int(N[2]*47/64)]
+i = delta[:,int(N[1]/2),int(N[2]*186/256)]
 ax = plt.subplot(111)
 ax.plot(x,f,'-',linewidth=2, label=' R = 0 mm')
 ax.plot(x,g,'-',linewidth=2, label=' R = 3 mm')
 ax.plot(x,h,'-',linewidth=2, label=' R = 4.5 mm')
-ax.plot(x,i,'-',linewidth=2, label=' R = 6 mm')
+ax.plot(x,i,'-',linewidth=2, label=' R = 5.8 mm')
 ax.set_ylim(-12, 7)
 plt.xlabel('z [mm]')
 plt.ylabel('Delta [ppm]')
 plt.title('Delta(z)')
 ax.legend()
 
-#Veo unicamente la variación dentro del electrodo para Delta_in
-plt.figure(31)
-x = np.arange(3.45,4.26,0.03)
-z = np.arange(115,142,1)
-f = delta[z,int(N[1]/2),int(N[2]/2)]
-g = delta[z,int(N[1]/2),int(N[2]*79/128)]
-h = delta[z,int(N[1]/2),int(N[2]*173/256)]
-i = delta[z,int(N[1]/2),int(N[2]*47/64)]
-ax = plt.subplot(111)
-ax.plot(x,f,'-',linewidth=2, label=' R = 0 mm')
-ax.plot(x,g,'-',linewidth=2, label=' R = 3 mm')
-ax.plot(x,h,'-',linewidth=2, label=' R = 4.5 mm')
-ax.plot(x,i,'-',linewidth=2, label=' R = 6 mm')
-ax.set_ylim(-12, 7)
-plt.xlabel('z [mm]')
-plt.ylabel('Delta [ppm]')
-plt.title('Delta(z) dentro del electrodo')
-ax.legend()
 
-#Veo unicamente la variación fuera del electrodo para Delta_out
-plt.figure(32)
-x = np.arange(4.17,7.68,0.03)
-z = np.arange(139,256,1)
-f = delta[z,int(N[1]/2),int(N[2]/2)]
-g = delta[z,int(N[1]/2),int(N[2]*79/128)]
-h = delta[z,int(N[1]/2),int(N[2]*173/256)]
-i = delta[z,int(N[1]/2),int(N[2]*47/64)]
-ax = plt.subplot(111)
-ax.plot(x,f,'-',linewidth=2, label=' R = 0 mm')
-ax.plot(x,g,'-',linewidth=2, label=' R = 3 mm')
-ax.plot(x,h,'-',linewidth=2, label=' R = 4.5 mm')
-ax.plot(x,i,'-',linewidth=2, label=' R = 6 mm')
-ax.set_ylim(-12, 7)
-plt.xlabel('z [mm]')
-plt.ylabel('Delta [ppm]')
-plt.title('Delta(z) fuera del electrodo')
-ax.legend()
+#%%
+#Exportación de datos para el código de superposición
+#PRUEBA
 
-#Gráficos para figuras esquemáticas
-#Delta_in
+#R=0
 
-plt.figure(33)
-x = np.arange(3.45,4.26,0.03)
-z = np.arange(115,142,1)
+#Grafico de la data a exportar
+plt.figure(40)
+x = np.arange(3.84,7.68,0.015)
+z = np.arange(256,512,1)
 f = delta[z,int(N[1]/2),int(N[2]/2)]
 ax = plt.subplot(111)
-ax.plot(x,f,'-',linewidth=2, label=' R = 0 mm')
-ax.set_ylim(-12, 7)
-plt.xlabel('z [mm]')
-plt.ylabel('Delta [ppm]')
-plt.title('Delta(z) dentro del electrodo')
-ax.legend()
-
-#Delta_out
-plt.figure(34)
-x = np.arange(4.17,7.68,0.03)
-z = np.arange(139,256,1)
-f = delta[z,int(N[1]/2),int(N[2]/2)]
-ax = plt.subplot(111)
-ax.plot(x,f,'-',linewidth=2, label=' R = 0 mm')
-ax.set_ylim(-12, 7)
-plt.xlabel('z [mm]')
-plt.ylabel('Delta [ppm]')
-plt.title('Delta(z) fuera del electrodo')
-ax.legend()
-
-#Delta_centro
-
-plt.figure(35)
-x = np.arange(0,7.68,0.03)
-f = delta[:,int(N[1]/2),int(N[2]/2)]
-h = delta[:,int(N[1]/2),int(N[2]*173/256)]
-ax = plt.subplot(111)
-ax.plot(x,f,'-',linewidth=2, label=' R = 0 mm')
-ax.plot(x,h,'-',linewidth=2, label=' R = 4.5 mm')
-ax.set_ylim(-12, 7)
+ax.plot(x,f,'.',linewidth=2, label=' R = 0 mm')
+ax.set_ylim(-12, 8)
 plt.xlabel('z [mm]')
 plt.ylabel('Delta [ppm]')
 plt.title('Delta(z)')
+ax.legend()
+
+#Exportación de la data partida en z0
+
+z0 = 280 #voxel
+
+z_in = np.arange(256,int(z0),1)
+z_out = np.arange(int(z0+1),512,1)
+f_in = delta[z_in,int(N[1]/2),int(N[2]/2)]
+f_out = delta[z_out,int(N[1]/2),int(N[2]/2)]
+
+datos_in = np.array([z_in,f_in]).T
+np.savetxt('perfil_radio3840.in',datos_in)
+
+datos_out = np.array([z_out,f_out]).T
+np.savetxt('perfil_radio3840.out',datos_out)
+
+
+#hago una purueba para ver si los datos expordatos estan bien
+
+#datos_cargados tiene la data de z está en la primer columna y la data de
+# delta en la segunda columna
+
+def loadtext_without_columns(filePath, skipcols=[], delimiter=" "):
+
+    with open(filePath) as f:
+ 
+       n_cols = len(f.readline().split(delimiter))
+
+    #define a range from 0 to n_cols
+    usecols = np.arange(0, n_cols)
+
+    #remove the indices found in skipcols
+    usecols = set(usecols) - set(skipcols)
+
+    #sort the new indices in ascending order
+    usecols = sorted(usecols)
+
+    #load the file and retain indices found in usecols
+    data = np.loadtxt('perfil_radio3840.in', usecols = usecols)
+
+    return data
+data_z = loadtext_without_columns("./perfil_radio3840.in",skipcols = [1], delimiter = " ")
+print(data_z)
+data_f = loadtext_without_columns("./perfil_radio3840.in",skipcols = [0], delimiter = " ")
+print(data_f)
+
+plt.figure(23)
+ax = plt.subplot(111)
+ax.plot(data_z,data_f,'o',linewidth=8, label=' datos in')
+ax.plot(z,f,'.',linewidth=2, label=' datos originales')
+ax.set_ylim(-12, 8)
+plt.xlabel('z [voxel]')
+plt.ylabel('Delta [ppm]')
+plt.title('Delta')
 ax.legend()
 
 #%%
-#En esta sección determinamos los valores exactos para calcular Delta_in /
-#Delta_out y Delta_centro
-#NOTACIÓN: para clarificar los máximos y mínimos, iran con el subindice
-# de su función seguido de los números 1 correspondiente a Delta_in,
-# 2 a Delta_out y Delta_centro se calcula con estos valores
+#AHORA SÍ EXPORTAMOS LOS DATOS CORRESPONDIENTES A LOS 4 RADIOS
 
-#Delta_in
-#min
-z = np.arange(115,142,1)
+
+#Grafico de la data a exportar
+plt.figure(50)
+x = np.arange(256,512,1)
+z = np.arange(256,512,1)
 f = delta[z,int(N[1]/2),int(N[2]/2)]
 g = delta[z,int(N[1]/2),int(N[2]*79/128)]
 h = delta[z,int(N[1]/2),int(N[2]*173/256)]
-i = delta[z,int(N[1]/2),int(N[2]*47/64)]
+i = delta[z,int(N[1]/2),int(N[2]*186/256)]
+ax = plt.subplot(111)
+ax.plot(x,f,'.',linewidth=2, label=' R = 0 mm')
+ax.plot(x,g,'.',linewidth=2, label=' R = 3 mm')
+ax.plot(x,h,'.',linewidth=2, label=' R = 4.5 mm')
+ax.plot(x,i,'.',linewidth=2, label=' R = 5.8 mm')
+ax.set_ylim(-12, 8)
+plt.xlabel('z [mm]')
+plt.ylabel('Delta [ppm]')
+plt.title('Delta(z)')
+ax.legend()
 
-minf1 = np.min(f)
-print(minf1,['minf1'])
-ming1 = np.min(g)
-print(ming1,['ming1'])
-minh1 = np.min(h)
-print(minh1,['minh1'])
-mini1 = np.min(i)
-print(mini1,['mini1'])
-#max
-z = np.arange(120,136,1)
-f = delta[z,int(N[1]/2),int(N[2]/2)]
-g = delta[z,int(N[1]/2),int(N[2]*79/128)]
-h = delta[z,int(N[1]/2),int(N[2]*173/256)]
-i = delta[z,int(N[1]/2),int(N[2]*47/64)]
+#*****************************************************************************
+#R=0mm corresponte realmente a 12800um
 
-maxf1 = np.max(f)
-print(maxf1,['maxf1'])
-maxg1 = np.max(g)
-print(maxg1,['maxg1'])
-maxh1 = np.max(h)
-print(maxh1,['maxh1'])
-maxi1 = np.max(i)
-print(maxi1,['maxi1'])
+#Determinación de z0 para R=0
 
-#Diferencias
-Delta_in_f = maxf1-minf1 
-print(Delta_in_f,['Delta_in_f'])
-Delta_in_g = maxg1-ming1
-print(Delta_in_g,['Delta_in_g'])
-Delta_in_h = maxh1-minh1
-print(Delta_in_h,['Delta_in_h'])
-Delta_in_i = maxi1-mini1
-print(Delta_in_i,['Delta_in_i'])
+z = np.arange(256,512,1)
+f_det = delta[z,int(N[1]/2),int(N[2]/2)]
 
-#Delta_out
-#min
-z = np.arange(142,256,1)
-f = delta[z,int(N[1]/2),int(N[2]/2)]
-g = delta[z,int(N[1]/2),int(N[2]*79/128)]
-h = delta[z,int(N[1]/2),int(N[2]*173/256)]
-i = delta[z,int(N[1]/2),int(N[2]*47/64)]
+min_f_det = np.min(f_det)
+z0_0 = np.where(f_det == min_f_det)
+print(z0_0)
+z0_0 = int(23) + int(256)
+print(z0_0)
 
-minf2 = np.min(f)
-print(minf2,['minf2'])
-ming2 = np.min(g)
-print(ming2,['ming2'])
-minh2 = np.min(h)
-print(minh2,['minh2'])
-mini2 = np.min(i)
-print(mini2,['mini2'])
-#max
-z = np.arange(139,256,1)
-f = delta[z,int(N[1]/2),int(N[2]/2)]
-g = delta[z,int(N[1]/2),int(N[2]*79/128)]
-h = delta[z,int(N[1]/2),int(N[2]*173/256)]
-i = delta[z,int(N[1]/2),int(N[2]*47/64)]
+#Exportación de la data partida en z0_0
+ 
+z_in = np.arange(0,255-z0_0,-1)
+z_in_dom = np.arange(z0_0,255,-1)
+z_out = np.arange(z0_0,512,1)
+f_in = delta[z_in_dom,int(N[1]/2),int(N[2]/2)]
+f_out = delta[z_out,int(N[1]/2),int(N[2]/2)]
 
-maxf2 = np.max(f)
-print(maxf2,['maxf2'])
-maxg2 = np.max(g)
-print(maxg2,['maxg2'])
-maxh2 = np.max(h)
-print(maxh2,['maxh2'])
-maxi2 = np.max(i)
-print(maxi2,['maxi2'])
+datos_in = np.array([z_in,f_in]).T
+np.savetxt('perfil_radio12800.in',datos_in)
 
-#Diferencias
-Delta_out_f = maxf2-minf2 
-print(Delta_out_f,['Delta_out_f'])
-Delta_out_g = maxg2-ming2
-print(Delta_out_g,['Delta_out_g'])
-Delta_out_h = maxh2-minh2
-print(Delta_out_h,['Delta_out_h'])
-Delta_out_i = maxi2-mini2
-print(Delta_out_i,['Delta_out_i'])
+datos_out = np.array([z_out,f_out]).T
+np.savetxt('perfil_radio12800.out',datos_out)
 
+#*****************************************************************************
+#R=3mm corresponde realmente a 15800um
+#Determinación de z0 para R=3 mm
 
+z = np.arange(256,512,1)
+g_det = delta[z,int(N[1]/2),int(N[2]*79/128)]
 
+min_g_det = np.min(g_det)
+z0_3 = np.where(g_det == min_g_det)
+print(z0_3)
+z0_3 = int(23) + int(256)
+print(z0_3)
+
+#Exportación de la data partida en z0_3
+ 
+z_in = np.arange(0,255-z0_3,-1)
+z_in_dom = np.arange(z0_3,255,-1)
+z_out = np.arange(z0_3,512,1)
+g_in = delta[z_in_dom,int(N[1]/2),int(N[2]*79/128)]
+g_out = delta[z_out,int(N[1]/2),int(N[2]*79/128)]
+
+datos_in = np.array([z_in,g_in]).T
+np.savetxt('perfil_radio15800.in',datos_in)
+
+datos_out = np.array([z_out,g_out]).T
+np.savetxt('perfil_radio15800.out',datos_out)
+
+#*****************************************************************************
+#R=4mm corresponde realmente a 16800um
+#Determinación de z0 para R=4 mm
+
+z = np.arange(256,512,1)
+h_det = delta[z,int(N[1]/2),int(N[2]*173/256)]
+
+min_h_det = np.min(h_det)
+z0_4 = np.where(h_det == min_h_det)
+print(z0_4)
+z0_4 = int(23) + int(256)
+print(z0_4)
+
+#Exportación de la data partida en z0_4
+ 
+z_in = np.arange(0,255-z0_4,-1)
+z_in_dom = np.arange(z0_4,255,-1)
+z_out = np.arange(z0_4,512,1)
+h_in = delta[z_in_dom,int(N[1]/2),int(N[2]*173/256)]
+h_out = delta[z_out,int(N[1]/2),int(N[2]*173/256)]
+
+datos_in = np.array([z_in,h_in]).T
+np.savetxt('perfil_radio16800.in',datos_in)
+
+datos_out = np.array([z_out,h_out]).T
+np.savetxt('perfil_radio16800.out',datos_out)
+
+#*****************************************************************************
+#R=5.8mm corresponde realmente a 18600um
+#Determinación de z0 para R=5.8 mm
+
+z = np.arange(256,512,1)
+i_det = delta[z,int(N[1]/2),int(N[2]*186/256)]
+
+min_i_det = np.min(i_det)
+z0_5 = np.where(i_det == min_i_det)
+print(z0_5)
+z0_5 = int(23) + int(256)
+print(z0_5)
+
+#Exportación de la data partida en z0_3
+ 
+z_in = np.arange(0,255-z0_5,-1)
+z_in_dom = np.arange(z0_5,255,-1)
+z_out = np.arange(z0_5,512,1)
+i_in = delta[z_in_dom,int(N[1]/2),int(N[2]*186/256)]
+i_out = delta[z_out,int(N[1]/2),int(N[2]*186/256)]
+
+datos_in = np.array([z_in,i_in]).T
+np.savetxt('perfil_radio18600.in',datos_in)
+
+datos_out = np.array([z_out,i_out]).T
+np.savetxt('perfil_radio18600.out',datos_out)
 #%%
  
 plt.show()
