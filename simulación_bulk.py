@@ -215,6 +215,11 @@ ax.legend()
 #%%
 #AHORA SÍ EXPORTAMOS LOS DATOS CORRESPONDIENTES A LOS 4 RADIOS
 
+#IMPORTANTE: El último voxel con información in es el 279 y el primer voxel
+#con información out es el 280. Esto vale para todas las funciones de los 
+#radios, se demuestran estos valores para f, pero se utilizan los mismos
+# para g, h e i
+
 
 #Grafico de la data a exportar
 plt.figure(50)
@@ -240,22 +245,27 @@ ax.legend()
 
 #Determinación de z0 para R=0
 
-z = np.arange(256,512,1)
-f_det = delta[z,int(N[1]/2),int(N[2]/2)]
+z = np.arange(3.84,7.68,0.015)
+z_dom = np.arange(256,512,1)
+f_det = delta[z_dom,int(N[1]/2),int(N[2]/2)]
 
 min_f_det = np.min(f_det)
-z0_0 = np.where(f_det == min_f_det)
-print(z0_0)
-z0_0 = int(23) + int(256)
-print(z0_0)
+max_f_det = np.max(f_det)
+z0_in = np.where(f_det == min_f_det)
+z0_out = np.where(f_det == max_f_det)
+print(z0_in)
+print(z0_out)
+z0_in = 4.185
+print(z0_in)
 
 #Exportación de la data partida en z0_0
  
-z_in = np.arange(0,255-z0_0,-1)
-z_in_dom = np.arange(z0_0,255,-1)
-z_out = np.arange(z0_0,512,1)
+z_in = np.arange(-0,3.84-z0_in,-0.015)
+z_in_dom = np.arange(279,256,-1)
+z_out = np.arange(0,3.48,0.015)
+z_out_dom = np.arange(280,512,1) 
 f_in = delta[z_in_dom,int(N[1]/2),int(N[2]/2)]
-f_out = delta[z_out,int(N[1]/2),int(N[2]/2)]
+f_out = delta[z_out_dom,int(N[1]/2),int(N[2]/2)]
 
 datos_in = np.array([z_in,f_in]).T
 np.savetxt('perfil_radio12800.in',datos_in)
@@ -265,22 +275,11 @@ np.savetxt('perfil_radio12800.out',datos_out)
 
 #*****************************************************************************
 #R=3mm corresponde realmente a 15800um
-#Determinación de z0 para R=3 mm
-
-z = np.arange(256,512,1)
-g_det = delta[z,int(N[1]/2),int(N[2]*79/128)]
-
-min_g_det = np.min(g_det)
-z0_3 = np.where(g_det == min_g_det)
-print(z0_3)
-z0_3 = int(23) + int(256)
-print(z0_3)
-
 #Exportación de la data partida en z0_3
  
-z_in = np.arange(0,255-z0_3,-1)
-z_in_dom = np.arange(z0_3,255,-1)
-z_out = np.arange(z0_3,512,1)
+z_in = np.arange(0,255-z0_in,-1)
+z_in_dom = np.arange(z0_in,255,-1)
+z_out = np.arange(z0_in,512,1)
 g_in = delta[z_in_dom,int(N[1]/2),int(N[2]*79/128)]
 g_out = delta[z_out,int(N[1]/2),int(N[2]*79/128)]
 
@@ -292,22 +291,11 @@ np.savetxt('perfil_radio15800.out',datos_out)
 
 #*****************************************************************************
 #R=4mm corresponde realmente a 16800um
-#Determinación de z0 para R=4 mm
-
-z = np.arange(256,512,1)
-h_det = delta[z,int(N[1]/2),int(N[2]*173/256)]
-
-min_h_det = np.min(h_det)
-z0_4 = np.where(h_det == min_h_det)
-print(z0_4)
-z0_4 = int(23) + int(256)
-print(z0_4)
-
 #Exportación de la data partida en z0_4
  
-z_in = np.arange(0,255-z0_4,-1)
-z_in_dom = np.arange(z0_4,255,-1)
-z_out = np.arange(z0_4,512,1)
+z_in = np.arange(0,255-z0_in,-1)
+z_in_dom = np.arange(z0_in,255,-1)
+z_out = np.arange(z0_in,512,1)
 h_in = delta[z_in_dom,int(N[1]/2),int(N[2]*173/256)]
 h_out = delta[z_out,int(N[1]/2),int(N[2]*173/256)]
 
@@ -319,22 +307,11 @@ np.savetxt('perfil_radio16800.out',datos_out)
 
 #*****************************************************************************
 #R=5.8mm corresponde realmente a 18600um
-#Determinación de z0 para R=5.8 mm
-
-z = np.arange(256,512,1)
-i_det = delta[z,int(N[1]/2),int(N[2]*186/256)]
-
-min_i_det = np.min(i_det)
-z0_5 = np.where(i_det == min_i_det)
-print(z0_5)
-z0_5 = int(23) + int(256)
-print(z0_5)
-
 #Exportación de la data partida en z0_3
  
-z_in = np.arange(0,255-z0_5,-1)
-z_in_dom = np.arange(z0_5,255,-1)
-z_out = np.arange(z0_5,512,1)
+z_in = np.arange(0,255-z0_in,-1)
+z_in_dom = np.arange(z0_in,255,-1)
+z_out = np.arange(z0_in,512,1)
 i_in = delta[z_in_dom,int(N[1]/2),int(N[2]*186/256)]
 i_out = delta[z_out,int(N[1]/2),int(N[2]*186/256)]
 
