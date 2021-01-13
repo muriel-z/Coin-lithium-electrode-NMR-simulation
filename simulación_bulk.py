@@ -268,58 +268,61 @@ f_in = delta[z_in_dom,int(N[1]/2),int(N[2]/2)]
 f_out = delta[z_out_dom,int(N[1]/2),int(N[2]/2)]
 
 datos_in = np.array([z_in,f_in]).T
-np.savetxt('perfil_radio12800.in',datos_in)
+np.savetxt('perfil_radio128.in',datos_in)
 
 datos_out = np.array([z_out,f_out]).T
-np.savetxt('perfil_radio12800.out',datos_out)
+np.savetxt('perfil_radio128.out',datos_out)
 
 #*****************************************************************************
 #R=3mm corresponde realmente a 15800um
 #Exportación de la data partida en z0_3
  
-z_in = np.arange(0,255-z0_in,-1)
-z_in_dom = np.arange(z0_in,255,-1)
-z_out = np.arange(z0_in,512,1)
+z_in = np.arange(-0,3.84-z0_in,-0.015)
+z_in_dom = np.arange(279,256,-1)
+z_out = np.arange(0,3.48,0.015)
+z_out_dom = np.arange(280,512,1) 
 g_in = delta[z_in_dom,int(N[1]/2),int(N[2]*79/128)]
-g_out = delta[z_out,int(N[1]/2),int(N[2]*79/128)]
+g_out = delta[z_out_dom,int(N[1]/2),int(N[2]*79/128)]
 
 datos_in = np.array([z_in,g_in]).T
-np.savetxt('perfil_radio15800.in',datos_in)
+np.savetxt('perfil_radio158.in',datos_in)
 
 datos_out = np.array([z_out,g_out]).T
-np.savetxt('perfil_radio15800.out',datos_out)
+np.savetxt('perfil_radio158.out',datos_out)
 
 #*****************************************************************************
 #R=4mm corresponde realmente a 16800um
 #Exportación de la data partida en z0_4
  
-z_in = np.arange(0,255-z0_in,-1)
-z_in_dom = np.arange(z0_in,255,-1)
-z_out = np.arange(z0_in,512,1)
+z_in = np.arange(-0,3.84-z0_in,-0.015)
+z_in_dom = np.arange(279,256,-1)
+z_out = np.arange(0,3.48,0.015)
+z_out_dom = np.arange(280,512,1) 
 h_in = delta[z_in_dom,int(N[1]/2),int(N[2]*173/256)]
-h_out = delta[z_out,int(N[1]/2),int(N[2]*173/256)]
+h_out = delta[z_out_dom,int(N[1]/2),int(N[2]*173/256)]
 
 datos_in = np.array([z_in,h_in]).T
-np.savetxt('perfil_radio16800.in',datos_in)
+np.savetxt('perfil_radio168.in',datos_in)
 
 datos_out = np.array([z_out,h_out]).T
-np.savetxt('perfil_radio16800.out',datos_out)
+np.savetxt('perfil_radio168.out',datos_out)
 
 #*****************************************************************************
 #R=5.8mm corresponde realmente a 18600um
 #Exportación de la data partida en z0_3
  
-z_in = np.arange(0,255-z0_in,-1)
-z_in_dom = np.arange(z0_in,255,-1)
-z_out = np.arange(z0_in,512,1)
+z_in = np.arange(-0,3.84-z0_in,-0.015)
+z_in_dom = np.arange(279,256,-1)
+z_out = np.arange(0,3.48,0.015)
+z_out_dom = np.arange(280,512,1) 
 i_in = delta[z_in_dom,int(N[1]/2),int(N[2]*186/256)]
-i_out = delta[z_out,int(N[1]/2),int(N[2]*186/256)]
+i_out = delta[z_out_dom,int(N[1]/2),int(N[2]*186/256)]
 
 datos_in = np.array([z_in,i_in]).T
-np.savetxt('perfil_radio18600.in',datos_in)
+np.savetxt('perfil_radio186.in',datos_in)
 
 datos_out = np.array([z_out,i_out]).T
-np.savetxt('perfil_radio18600.out',datos_out)
+np.savetxt('perfil_radio186.out',datos_out)
 #%%
  
 plt.show()
