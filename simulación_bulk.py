@@ -9,12 +9,13 @@ Created on Fri Oct 30 07:22:30 2020
 
 import numpy as np 
 import matplotlib.pyplot as plt 
+from oct2py import Oct2Py
 from mpl_toolkits.mplot3d import Axes3D 
 import calculateFieldShift as cFS 
 from SimulationVolume import *
 
 #Voy a construir un electrodo cilindrica, con las dimensiones h=0.71mm
-# y d=12mm. Además quiero FOVz=10*h y FOVxy=2*d
+# y d=12mm. Además quiero FOVz~10*h y FOVxy~2*d
 
 
 N = [512,256,256]
@@ -91,6 +92,7 @@ plt.figure(11)
 plt.pcolormesh(x_dim,y_dim,delta[z_slice,:,:], cmap='seismic', vmax=v, vmin=-v)
 plt.xlabel('x [mm]')
 plt.ylabel('y [mm]')
+plt.clim(-4,4)
 plt.colorbar()
 
 # slice en x
@@ -110,7 +112,14 @@ plt.figure(21)
 plt.pcolormesh(y_dim,z_dim,delta[:,:,x_slice], cmap='seismic', vmax=v, vmin=-v)
 plt.xlabel('y [mm]')
 plt.ylabel('z [mm]')
+plt.clim(-4,4)
 plt.colorbar()
+
+# Agrego un gráfico 3D del bulk
+fig = plt.figure(60)
+ax = fig.gca(projection='3d')
+x = np.linspace(0,99,100)
+ax.voxels(matriz_3D, facecolors='grey', edgecolor='k')
 
 #%%
 #GRAFICOS PARA VERIFICAR LA EXPORTACIÓN DE DATA DE PERFILES
@@ -129,12 +138,12 @@ i = delta[:,int(N[1]/2),int(N[2]*186/256)]
 ax = plt.subplot(111)
 ax.plot(x,f,'-',linewidth=2, label=' R = 0 mm')
 ax.plot(x,g,'-',linewidth=2, label=' R = 3 mm')
-ax.plot(x,h,'-',linewidth=2, label=' R = 4.5 mm')
-ax.plot(x,i,'-',linewidth=2, label=' R = 5.8 mm')
-ax.set_ylim(-12, 7)
+ax.plot(x,h,'-',linewidth=2, label=' R = 4,5 mm')
+ax.plot(x,i,'-',linewidth=2, label=' R = 5,8 mm')
+ax.set_ylim(-10, 10)
 plt.xlabel('z [mm]')
-plt.ylabel('Delta [ppm]')
-plt.title('Delta(z)')
+plt.ylabel(r'$\delta$(z) [ppm]')
+plt.title(' ')
 ax.legend()
 
 
@@ -182,7 +191,7 @@ def loadtext_without_columns(filePath, skipcols=[], delimiter=" "):
 
     with open(filePath) as f:
  
-       n_cols = len(f.readline().split(delimiter))
+        n_cols = len(f.readline().split(delimiter))
 
     #define a range from 0 to n_cols
     usecols = np.arange(0, n_cols)
@@ -234,7 +243,7 @@ ax.plot(x,f,'.',linewidth=2, label=' R = 0 mm')
 ax.plot(x,g,'.',linewidth=2, label=' R = 3 mm')
 ax.plot(x,h,'.',linewidth=2, label=' R = 4.5 mm')
 ax.plot(x,i,'.',linewidth=2, label=' R = 5.8 mm')
-ax.set_ylim(-12, 8)
+ax.set_ylim(-12, 10)
 plt.xlabel('z [mm]')
 plt.ylabel('Delta [ppm]')
 plt.title('Delta(z)')
@@ -268,10 +277,10 @@ f_in = delta[z_in_dom,int(N[1]/2),int(N[2]/2)]
 f_out = delta[z_out_dom,int(N[1]/2),int(N[2]/2)]
 
 datos_in = np.array([z_in,f_in]).T
-np.savetxt('perfil_radio128.in',datos_in)
+np.savetxt('perfil_radio000.in',datos_in)
 
 datos_out = np.array([z_out,f_out]).T
-np.savetxt('perfil_radio128.out',datos_out)
+np.savetxt('perfil_radio000.out',datos_out)
 
 #*****************************************************************************
 #R=3mm corresponde realmente a 15800um
@@ -285,13 +294,13 @@ g_in = delta[z_in_dom,int(N[1]/2),int(N[2]*79/128)]
 g_out = delta[z_out_dom,int(N[1]/2),int(N[2]*79/128)]
 
 datos_in = np.array([z_in,g_in]).T
-np.savetxt('perfil_radio158.in',datos_in)
+np.savetxt('perfil_radio300.in',datos_in)
 
 datos_out = np.array([z_out,g_out]).T
-np.savetxt('perfil_radio158.out',datos_out)
+np.savetxt('perfil_radio300.out',datos_out)
 
 #*****************************************************************************
-#R=4mm corresponde realmente a 16800um
+#R=4.5mm corresponde realmente a 16800um
 #Exportación de la data partida en z0_4
  
 z_in = np.arange(-0,3.84-z0_in,-0.015)
@@ -302,10 +311,10 @@ h_in = delta[z_in_dom,int(N[1]/2),int(N[2]*173/256)]
 h_out = delta[z_out_dom,int(N[1]/2),int(N[2]*173/256)]
 
 datos_in = np.array([z_in,h_in]).T
-np.savetxt('perfil_radio168.in',datos_in)
+np.savetxt('perfil_radio450.in',datos_in)
 
 datos_out = np.array([z_out,h_out]).T
-np.savetxt('perfil_radio168.out',datos_out)
+np.savetxt('perfil_radio450.out',datos_out)
 
 #*****************************************************************************
 #R=5.8mm corresponde realmente a 18600um
@@ -319,10 +328,10 @@ i_in = delta[z_in_dom,int(N[1]/2),int(N[2]*186/256)]
 i_out = delta[z_out_dom,int(N[1]/2),int(N[2]*186/256)]
 
 datos_in = np.array([z_in,i_in]).T
-np.savetxt('perfil_radio186.in',datos_in)
+np.savetxt('perfil_radio580.in',datos_in)
 
 datos_out = np.array([z_out,i_out]).T
-np.savetxt('perfil_radio186.out',datos_out)
+np.savetxt('perfil_radio580.out',datos_out)
 #%%
  
 plt.show()
