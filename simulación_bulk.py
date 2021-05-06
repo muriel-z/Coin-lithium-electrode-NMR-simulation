@@ -9,6 +9,7 @@ Created on Fri Oct 30 07:22:30 2020
 
 import numpy as np 
 import matplotlib.pyplot as plt 
+import matplotlib.colors
 from oct2py import Oct2Py
 from mpl_toolkits.mplot3d import Axes3D 
 import calculateFieldShift as cFS 
@@ -57,6 +58,7 @@ for ind_y in range(Nmy):
 indices = np.array(indices).T
 indices_flat = np.ravel_multi_index(indices, N)   
 np.put(matriz_3D, indices_flat, 1)
+
 #%%
 # ahora calculamos la perturbacion de campo, suponiendo que esa matriz
 # representa al litio
@@ -75,9 +77,9 @@ delta = cFS.calculateFieldShift(litio, voxelsize)*1e6
 
 # slice en z
 
-z_slice = int(N[0]/2)-int(nsz/2)
-y_dim = np.arange(0,25.6,0.1)
-x_dim = np.arange(0,25.6,0.1)
+z_slice = int(N[0]/2)-int(nsz/2)-1
+y_dim = np.arange(-12.8,12.8,0.1)
+x_dim = np.arange(-12.8,12.8,0.1)
 
 
 plt.figure(10)
@@ -98,8 +100,8 @@ plt.colorbar()
 # slice en x
 
 x_slice = int(N[2]/2)
-z_dim = np.arange(0,7.68,0.015)
-y_dim = np.arange(0,25.6,0.1)
+z_dim = np.arange(-3.84,3.84,0.015)
+y_dim = np.arange(-12.8,12.8,0.1)
 
 plt.figure(20)
 plt.pcolormesh(y_dim,z_dim,matriz_3D[:,:,x_slice])
@@ -114,13 +116,115 @@ plt.xlabel('y [mm]')
 plt.ylabel('z [mm]')
 plt.clim(-4,4)
 plt.colorbar()
+# #%%
+# # Agrego un gráfico 3D del bulk
+# tmpvol =np.zeros((Nmz+5,Nmy,Nmx))
+# tmpvol[1:-4,:,:] = matriz_3D
+# tmpvol[0,:,:] = 1
+# filename = './tmp.stl'
+# with Oct2Py() as oc:
+#   print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+#   print("Creando figura 3D. Esto puede demorar varios minutos...")
+#   fv = oc.isosurface(tmpvol, 0.5) # Make patch w. faces "out"
+#   oc.stlwrite(filename,fv)        # Save to binary .stl
+# print("       Listo!") 
+# print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 
-# Agrego un gráfico 3D del bulk
+#%%
+muestra = matriz_3D.T
 fig = plt.figure(60)
 ax = fig.gca(projection='3d')
-x = np.linspace(0,99,100)
-ax.voxels(matriz_3D, facecolors='grey', edgecolor='k')
+ax.voxels(muestra, facecolors='grey', edgecolor='grey')
 
+
+#%% 
+#Grafico 3D con distintos colores y sombras
+muestra = matriz_3D.T
+def midpoints(x):
+    sl = ()
+    for i in range(x.ndim):
+        x = (x[sl + np.index_exp[:-1]] + x[sl + np.index_exp[1:]]) / 2.0
+        sl += np.index_exp[:]
+    return x
+
+# prepare some coordinates, and attach rgb values to each
+r, g, b = np.indices((257, 257, 513)) / 512.0
+rc = midpoints(r)
+gc = midpoints(g)
+bc = midpoints(b)
+# combine the color components
+colors = np.zeros(muestra.shape + (3,))
+colors[..., 0] = rc
+colors[..., 1] = gc
+colors[..., 2] = bc
+
+x_p,y_p,z_p = np.indices((257,257,513))
+
+# and plot everything
+ax = plt.figure(63).add_subplot(projection='3d')
+ax.voxels(x_p,y_p,z_p, muestra,
+          facecolors=colors,
+          edgecolors=np.clip(2*colors - 0.5, 0, 1),  # brighter
+          linewidth=0.5)
+ax.set(xlabel='x [voxels]', ylabel='y [voxels]', zlabel='z [voxels]')
+#%%
+#Grafico para verificar la homogeneidad de delta(x), o sea perfil en x
+
+plt.figure(70)
+x_int = np.arange(69,188,1)
+x = np.arange(-5.9,6.0,0.1)
+f = delta[int(N[0]/2)+int(nsz/2)+1,int(N[1]/2),x_int]
+ax = plt.subplot(111)
+ax.plot(x,f,linestyle='-', marker='.',linewidth=2, label=r'$\delta$(x) ')
+ax.set_xlim(-6,6)
+plt.xlabel('x [mm]')
+plt.ylabel(r'$\delta$(x) [ppm]')
+plt.title(' ')
+ax.legend()
+
+#%%
+#Grafico de comparación R=0 y tita de heavyside en las proximidades ocurrentes
+plt.figure(71)
+z = np.arange(273,290,1)
+x = np.arange(0.255,0.51,0.015)
+f = delta[z,int(N[1]/2),int(N[2]/2)]
+i = delta[z,int(N[1]/2),int(N[2]*186/256)]
+g = 15.97*np.heaviside(f,1)-8.60
+ax = plt.subplot(111)
+ax.plot(x,g,'-',linewidth=3,color='#c8d11f', label= 'Función escalón')
+ax.plot(x,f,linestyle='-', marker='.', linewidth=2,color='#1f77b4', label=' Perfil R = 0 mm')
+ax.plot(x,i,linestyle='-', marker='.', linewidth=2,color='#d62728', label=' Perfil R = 5,8 mm')
+plt.xlabel('z [mm]')
+plt.ylabel(r'$\delta$(z) [ppm]')
+plt.title(' ')
+ax.legend()
+#%%
+#Grafico para presentar eta_out 
+plt.figure(72)
+z = np.arange(279,290,1)
+x = np.arange(0.345,0.50,0.015)
+f = delta[z,int(N[1]/2),int(N[2]/2)]
+ax = plt.subplot(111)
+ax.plot(x,f,linestyle='-', marker='.',linewidth=2, label=' R = 0 mm')
+ax.set_ylim(2,8)
+plt.xlabel('z [mm]')
+plt.ylabel(r'$\delta$(z) [ppm]')
+plt.title(' ')
+ax.legend()
+
+#Grafico eta_in
+
+plt.figure(73)
+z = np.arange(273,281,1)
+x = np.arange(0.255,0.375,0.015)
+f = delta[z,int(N[1]/2),int(N[2]/2)]
+ax = plt.subplot(111)
+ax.plot(x,f,linestyle='-', marker='.',linewidth=2, label=' R = 0 mm')
+ax.set_ylim(-9,-2)
+plt.xlabel('z [mm]')
+plt.ylabel(r'$\delta$(z) [ppm]')
+plt.title(' ')
+ax.legend()
 #%%
 #GRAFICOS PARA VERIFICAR LA EXPORTACIÓN DE DATA DE PERFILES
 #Delta en función de z para distintos radios R
@@ -130,7 +234,7 @@ ax.voxels(matriz_3D, facecolors='grey', edgecolor='k')
 
 
 plt.figure(30)
-x = np.arange(0,7.68,0.015)
+x = np.arange(-3.84,3.84,0.015)
 f = delta[:,int(N[1]/2),int(N[2]/2)]
 g = delta[:,int(N[1]/2),int(N[2]*79/128)]
 h = delta[:,int(N[1]/2),int(N[2]*173/256)]
@@ -333,5 +437,99 @@ np.savetxt('perfil_radio580.in',datos_in)
 datos_out = np.array([z_out,i_out]).T
 np.savetxt('perfil_radio580.out',datos_out)
 #%%
+#Agrego la seccion horrible para calcular los valores máximos y minimos de eta_in y eta_out
+
+#En esta sección determinamos los valores exactos para calcular Delta_in /
+#Delta_out y Delta_centro
+#NOTACIÓN: para clarificar los máximos y mínimos, iran con el subindice
+# de su función seguido de los números 1 correspondiente a eta_in,
+# 2 a eta_out 
+
+#eta_in
+#min
+z = np.arange(273,279,1)
+f = delta[z,int(N[1]/2),int(N[2]/2)]
+g = delta[z,int(N[1]/2),int(N[2]*79/128)]
+h = delta[z,int(N[1]/2),int(N[2]*173/256)]
+i = delta[z,int(N[1]/2),int(N[2]*186/256)]
+
+minf1 = np.min(f)
+print(minf1,['minf1'])
+ming1 = np.min(g)
+print(ming1,['ming1'])
+minh1 = np.min(h)
+print(minh1,['minh1'])
+mini1 = np.min(i)
+print(mini1,['mini1'])
+#max
+z = np.arange(273,279,1)
+f = delta[z,int(N[1]/2),int(N[2]/2)]
+g = delta[z,int(N[1]/2),int(N[2]*79/128)]
+h = delta[z,int(N[1]/2),int(N[2]*173/256)]
+i = delta[z,int(N[1]/2),int(N[2]*186/256)]
+
+maxf1 = np.max(f)
+print(maxf1,['maxf1'])
+maxg1 = np.max(g)
+print(maxg1,['maxg1'])
+maxh1 = np.max(h)
+print(maxh1,['maxh1'])
+maxi1 = np.max(i)
+print(maxi1,['maxi1'])
+
+#Diferencias
+Delta_in_f = maxf1-minf1 
+print(Delta_in_f,['Delta_in_f'])
+Delta_in_g = maxg1-ming1
+print(Delta_in_g,['Delta_in_g'])
+Delta_in_h = maxh1-minh1
+print(Delta_in_h,['Delta_in_h'])
+Delta_in_i = maxi1-mini1
+print(Delta_in_i,['Delta_in_i'])
+
+#eta_out
+#min
+z = np.arange(280,290,1)
+f = delta[z,int(N[1]/2),int(N[2]/2)]
+g = delta[z,int(N[1]/2),int(N[2]*79/128)]
+h = delta[z,int(N[1]/2),int(N[2]*173/256)]
+i = delta[z,int(N[1]/2),int(N[2]*186/256)]
+
+minf2 = np.min(f)
+print(minf2,['minf2'])
+ming2 = np.min(g)
+print(ming2,['ming2'])
+minh2 = np.min(h)
+print(minh2,['minh2'])
+mini2 = np.min(i)
+print(mini2,['mini2'])
+#max
+z = np.arange(280,290,1)
+f = delta[z,int(N[1]/2),int(N[2]/2)]
+g = delta[z,int(N[1]/2),int(N[2]*79/128)]
+h = delta[z,int(N[1]/2),int(N[2]*173/256)]
+i = delta[z,int(N[1]/2),int(N[2]*186/256)]
+
+maxf2 = np.max(f)
+print(maxf2,['maxf2'])
+maxg2 = np.max(g)
+print(maxg2,['maxg2'])
+maxh2 = np.max(h)
+print(maxh2,['maxh2'])
+maxi2 = np.max(i)
+print(maxi2,['maxi2'])
+
+#Diferencias
+Delta_out_f = maxf2-minf2 
+print(Delta_out_f,['Delta_out_f'])
+Delta_out_g = maxg2-ming2
+print(Delta_out_g,['Delta_out_g'])
+Delta_out_h = maxh2-minh2
+print(Delta_out_h,['Delta_out_h'])
+Delta_out_i = maxi2-mini2
+print(Delta_out_i,['Delta_out_i'])
  
+
+
+
 plt.show()
