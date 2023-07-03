@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Jul  3 14:39:37 2023
+
+@author: Muri
+"""
+
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
@@ -77,46 +84,46 @@ delta = cFS.calculateFieldShift(litio, voxelsize)*1e6
 
 # slice en z
 
-z_slice = int(N[0]/2)-int(nsz/2)-1
-y_dim = np.arange(-12.8,12.8,0.1)
-x_dim = np.arange(-12.8,12.8,0.1)
+# z_slice = int(N[0]/2)-int(nsz/2)-1
+# y_dim = np.arange(-12.8,12.8,0.1)
+# x_dim = np.arange(-12.8,12.8,0.1)
 
 
-plt.figure(10)
-plt.pcolormesh(x_dim,y_dim,matriz_3D[z_slice,:,:])
-plt.xlabel('x [mm]')
-plt.ylabel('y [mm]')
+# plt.figure(10)
+# plt.pcolormesh(x_dim,y_dim,matriz_3D[z_slice,:,:])
+# plt.xlabel('x [mm]')
+# plt.ylabel('y [mm]')
 
 
-v = 5
-plt.figure(11)
+# v = 5
+# plt.figure(11)
 
-plt.pcolormesh(x_dim,y_dim,delta[z_slice,:,:], cmap='seismic', vmax=v, vmin=-v)
-plt.xlabel('x [mm]')
-plt.ylabel('y [mm]')
-plt.clim(-4,4)
-plt.colorbar()
+# plt.pcolormesh(x_dim,y_dim,delta[z_slice,:,:], cmap='seismic', vmax=v, vmin=-v)
+# plt.xlabel('x [mm]')
+# plt.ylabel('y [mm]')
+# plt.clim(-4,4)
+# plt.colorbar()
 
-# slice en x
+# # slice en x
 
-x_slice = int(N[2]/2)
-z_dim = np.arange(-3.84,3.84,0.015)
-y_dim = np.arange(-12.8,12.8,0.1)
+# x_slice = int(N[2]/2)
+# z_dim = np.arange(-3.84,3.84,0.015)
+# y_dim = np.arange(-12.8,12.8,0.1)
 
-plt.figure(20)
-plt.pcolormesh(y_dim,z_dim,matriz_3D[:,:,x_slice])
-plt.xlabel('y [mm]')
-plt.ylabel('z [mm]')
+# plt.figure(20)
+# plt.pcolormesh(y_dim,z_dim,matriz_3D[:,:,x_slice])
+# plt.xlabel('y [mm]')
+# plt.ylabel('z [mm]')
 
 
-v = 4
-plt.figure(21)
-plt.pcolormesh(y_dim,z_dim,delta[:,:,x_slice], cmap='seismic', vmax=v, vmin=-v)
-plt.xlabel('y [mm]')
-plt.ylabel('z [mm]')
-plt.clim(-4,4)
-plt.colorbar()
-# #%%
+# v = 4
+# plt.figure(21)
+# plt.pcolormesh(y_dim,z_dim,delta[:,:,x_slice], cmap='seismic', vmax=v, vmin=-v)
+# plt.xlabel('y [mm]')
+# plt.ylabel('z [mm]')
+# plt.clim(-4,4)
+# plt.colorbar()
+# # #%%
 # # Agrego un gráfico 3D del bulk
 # tmpvol =np.zeros((Nmz+5,Nmy,Nmx))
 # tmpvol[1:-4,:,:] = matriz_3D
@@ -131,10 +138,10 @@ plt.colorbar()
 # print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 
 #%%
-muestra = matriz_3D.T
-fig = plt.figure(60)
-ax = fig.gca(projection='3d')
-ax.voxels(muestra, facecolors='grey', edgecolor='grey')
+# muestra = matriz_3D.T
+# fig = plt.figure(60)
+# ax = fig.gca(projection='3d')
+# ax.voxels(muestra, facecolors='grey', edgecolor='grey')
 
 
 #%% 
@@ -335,23 +342,23 @@ ax.voxels(muestra, facecolors='grey', edgecolor='grey')
 
 
 #Grafico de la data a exportar
-plt.figure(50)
-x = np.arange(256,512,1)
-z = np.arange(256,512,1)
-f = delta[z,int(N[1]/2),int(N[2]/2)]
-g = delta[z,int(N[1]/2),int(N[2]*79/128)]
-h = delta[z,int(N[1]/2),int(N[2]*173/256)]
-i = delta[z,int(N[1]/2),int(N[2]*186/256)]
-ax = plt.subplot(111)
-ax.plot(x,f,'.',linewidth=2, label=' R = 0 mm')
-ax.plot(x,g,'.',linewidth=2, label=' R = 3 mm')
-ax.plot(x,h,'.',linewidth=2, label=' R = 4.5 mm')
-ax.plot(x,i,'.',linewidth=2, label=' R = 5.8 mm')
-ax.set_ylim(-12, 10)
-plt.xlabel('z [mm]')
-plt.ylabel('Delta [ppm]')
-plt.title('Delta(z)')
-ax.legend()
+# plt.figure(50)
+# x = np.arange(256,512,1)
+# z = np.arange(256,512,1)
+# f = delta[z,int(N[1]/2),int(N[2]/2)]
+# g = delta[z,int(N[1]/2),int(N[2]*79/128)]
+# h = delta[z,int(N[1]/2),int(N[2]*173/256)]
+# i = delta[z,int(N[1]/2),int(N[2]*186/256)]
+# ax = plt.subplot(111)
+# ax.plot(x,f,'.',linewidth=2, label=' R = 0 mm')
+# ax.plot(x,g,'.',linewidth=2, label=' R = 3 mm')
+# ax.plot(x,h,'.',linewidth=2, label=' R = 4.5 mm')
+# ax.plot(x,i,'.',linewidth=2, label=' R = 5.8 mm')
+# ax.set_ylim(-12, 10)
+# plt.xlabel('z [mm]')
+# plt.ylabel('Delta [ppm]')
+# plt.title('Delta(z)')
+# ax.legend()
 
 #*****************************************************************************
 #R=0mm corresponte realmente a 12800um
@@ -373,69 +380,248 @@ print(z0_in)
 
 #Exportación de la data partida en z0_0
  
-z_in = np.arange(-0,3.84-z0_in,-0.015)
-z_in_dom = np.arange(279,256,-1)
-z_out = np.arange(0,3.84,0.015)
-z_out_dom = np.arange(280,512,1) 
-f_in = delta[z_in_dom,int(N[1]/2),int(N[2]/2)]
-f_out = delta[z_out_dom,int(N[1]/2),int(N[2]/2)]
+# z_in = np.arange(-0,3.84-z0_in,-0.015)
+# z_in_dom = np.arange(279,256,-1)
+# z_out = np.arange(0,3.84,0.015)
+# z_out_dom = np.arange(280,512,1) 
+# f_in = delta[z_in_dom,int(N[1]/2),int(N[2]/2)]
+# f_out = delta[z_out_dom,int(N[1]/2),int(N[2]/2)]
 
-datos_in = np.array([z_in,f_in]).T
-np.savetxt('perfil_radio000.in',datos_in)
+# datos_in = np.array([z_in,f_in]).T
+# np.savetxt('perfil_radio000.in',datos_in)
 
-datos_out = np.array([z_out,f_out]).T
-np.savetxt('perfil_radio000.out',datos_out)
+# datos_out = np.array([z_out,f_out]).T
+# np.savetxt('perfil_radio000.out',datos_out)
 
 #*****************************************************************************
 #R=3mm corresponde realmente a 15800um
 #Exportación de la data partida en z0_3
  
+# z_in = np.arange(-0,3.84-z0_in,-0.015)
+# z_in_dom = np.arange(279,256,-1)
+# z_out = np.arange(0,3.84,0.015)
+# z_out_dom = np.arange(280,512,1) 
+# g_in = delta[z_in_dom,int(N[1]/2),int(N[2]*79/128)]
+# g_out = delta[z_out_dom,int(N[1]/2),int(N[2]*79/128)]
+
+# datos_in = np.array([z_in,g_in]).T
+# np.savetxt('perfil_radio300.in',datos_in)
+
+# datos_out = np.array([z_out,g_out]).T
+# np.savetxt('perfil_radio300.out',datos_out)
+
+# #*****************************************************************************
+# #R=4.5mm corresponde realmente a 16800um
+# #Exportación de la data partida en z0_4
+ 
+# z_in = np.arange(-0,3.84-z0_in,-0.015)
+# z_in_dom = np.arange(279,256,-1)
+# z_out = np.arange(0,3.48,0.015)
+# z_out_dom = np.arange(280,512,1) 
+# h_in = delta[z_in_dom,int(N[1]/2),int(N[2]*173/256)]
+# h_out = delta[z_out_dom,int(N[1]/2),int(N[2]*173/256)]
+
+# datos_in = np.array([z_in,h_in]).T
+# np.savetxt('perfil_radio450.in',datos_in)
+
+# datos_out = np.array([z_out,h_out]).T
+# np.savetxt('perfil_radio450.out',datos_out)
+
+# #*****************************************************************************
+# #R=5.8mm corresponde realmente a 18600um
+# #Exportación de la data partida en z0_3
+ 
+# z_in = np.arange(-0,3.84-z0_in,-0.015)
+# z_in_dom = np.arange(279,256,-1)
+# z_out = np.arange(0,3.84,0.015)
+# z_out_dom = np.arange(280,512,1) 
+# i_in = delta[z_in_dom,int(N[1]/2),int(N[2]*186/256)]
+# i_out = delta[z_out_dom,int(N[1]/2),int(N[2]*186/256)]
+
+# datos_in = np.array([z_in,i_in]).T
+# np.savetxt('perfil_radio580.in',datos_in)
+
+# datos_out = np.array([z_out,i_out]).T
+# np.savetxt('perfil_radio580.out',datos_out)
+
+# Exporto los perfiles de los 23 radios
+
 z_in = np.arange(-0,3.84-z0_in,-0.015)
 z_in_dom = np.arange(279,256,-1)
 z_out = np.arange(0,3.48,0.015)
 z_out_dom = np.arange(280,512,1) 
-g_in = delta[z_in_dom,int(N[1]/2),int(N[2]*79/128)]
-g_out = delta[z_out_dom,int(N[1]/2),int(N[2]*79/128)]
 
+a_in = delta[z_in_dom,int(N[1]/2),128]
+a_out = delta[z_out_dom,int(N[1]/2),128]
+datos_in = np.array([z_in,a_in]).T
+np.savetxt('perfil_radio000.in',datos_in)
+datos_out = np.array([z_out,a_out]).T
+np.savetxt('perfil_radio000.out',datos_out)
+
+b_in = delta[z_in_dom,int(N[1]/2),131]
+b_out = delta[z_out_dom,int(N[1]/2),131]
+datos_in = np.array([z_in,b_in]).T
+np.savetxt('perfil_radio030.in',datos_in)
+datos_out = np.array([z_out,b_out]).T
+np.savetxt('perfil_radio030.out',datos_out)
+
+c_in = delta[z_in_dom,int(N[1]/2),133]
+c_out = delta[z_out_dom,int(N[1]/2),133]
+datos_in = np.array([z_in,c_in]).T
+np.savetxt('perfil_radio050.in',datos_in)
+datos_out = np.array([z_out,c_out]).T
+np.savetxt('perfil_radio050.out',datos_out)
+
+d_in = delta[z_in_dom,int(N[1]/2),136]
+d_out = delta[z_out_dom,int(N[1]/2),136]
+datos_in = np.array([z_in,d_in]).T
+np.savetxt('perfil_radio080.in',datos_in)
+datos_out = np.array([z_out,d_out]).T
+np.savetxt('perfil_radio080.out',datos_out)
+
+e_in = delta[z_in_dom,int(N[1]/2),138]
+e_out = delta[z_out_dom,int(N[1]/2),138]
+datos_in = np.array([z_in,e_in]).T
+np.savetxt('perfil_radio100.in',datos_in)
+datos_out = np.array([z_out,e_out]).T
+np.savetxt('perfil_radio100.out',datos_out)
+
+f_in = delta[z_in_dom,int(N[1]/2),141]
+f_out = delta[z_out_dom,int(N[1]/2),141]
+datos_in = np.array([z_in,f_in]).T
+np.savetxt('perfil_radio130.in',datos_in)
+datos_out = np.array([z_out,f_out]).T
+np.savetxt('perfil_radio130.out',datos_out)
+
+g_in = delta[z_in_dom,int(N[1]/2),144]
+g_out = delta[z_out_dom,int(N[1]/2),144]
 datos_in = np.array([z_in,g_in]).T
-np.savetxt('perfil_radio300.in',datos_in)
-
+np.savetxt('perfil_radio160.in',datos_in)
 datos_out = np.array([z_out,g_out]).T
-np.savetxt('perfil_radio300.out',datos_out)
+np.savetxt('perfil_radio160.out',datos_out)
 
-#*****************************************************************************
-#R=4.5mm corresponde realmente a 16800um
-#Exportación de la data partida en z0_4
- 
-z_in = np.arange(-0,3.84-z0_in,-0.015)
-z_in_dom = np.arange(279,256,-1)
-z_out = np.arange(0,3.48,0.015)
-z_out_dom = np.arange(280,512,1) 
-h_in = delta[z_in_dom,int(N[1]/2),int(N[2]*173/256)]
-h_out = delta[z_out_dom,int(N[1]/2),int(N[2]*173/256)]
-
+h_in = delta[z_in_dom,int(N[1]/2),146]
+h_out = delta[z_out_dom,int(N[1]/2),146]
 datos_in = np.array([z_in,h_in]).T
-np.savetxt('perfil_radio450.in',datos_in)
-
+np.savetxt('perfil_radio180.in',datos_in)
 datos_out = np.array([z_out,h_out]).T
-np.savetxt('perfil_radio450.out',datos_out)
+np.savetxt('perfil_radio180.out',datos_out)
 
-#*****************************************************************************
-#R=5.8mm corresponde realmente a 18600um
-#Exportación de la data partida en z0_3
- 
-z_in = np.arange(-0,3.84-z0_in,-0.015)
-z_in_dom = np.arange(279,256,-1)
-z_out = np.arange(0,3.48,0.015)
-z_out_dom = np.arange(280,512,1) 
-i_in = delta[z_in_dom,int(N[1]/2),int(N[2]*186/256)]
-i_out = delta[z_out_dom,int(N[1]/2),int(N[2]*186/256)]
-
+i_in = delta[z_in_dom,int(N[1]/2),148]
+i_out = delta[z_out_dom,int(N[1]/2),148]
 datos_in = np.array([z_in,i_in]).T
-np.savetxt('perfil_radio580.in',datos_in)
-
+np.savetxt('perfil_radio200.in',datos_in)
 datos_out = np.array([z_out,i_out]).T
-np.savetxt('perfil_radio580.out',datos_out)
+np.savetxt('perfil_radio200.out',datos_out)
+
+j_in = delta[z_in_dom,int(N[1]/2),151]
+j_out = delta[z_out_dom,int(N[1]/2),151]
+datos_in = np.array([z_in,j_in]).T
+np.savetxt('perfil_radio230.in',datos_in)
+datos_out = np.array([z_out,j_out]).T
+np.savetxt('perfil_radio230.out',datos_out)
+
+k_in = delta[z_in_dom,int(N[1]/2),154]
+k_out = delta[z_out_dom,int(N[1]/2),154]
+datos_in = np.array([z_in,k_in]).T
+np.savetxt('perfil_radio260.in',datos_in)
+datos_out = np.array([z_out,k_out]).T
+np.savetxt('perfil_radio260.out',datos_out)
+
+l_in = delta[z_in_dom,int(N[1]/2),157]
+l_out = delta[z_out_dom,int(N[1]/2),157]
+datos_in = np.array([z_in,l_in]).T
+np.savetxt('perfil_radio290.in',datos_in)
+datos_out = np.array([z_out,l_out]).T
+np.savetxt('perfil_radio290.out',datos_out)
+
+m_in = delta[z_in_dom,int(N[1]/2),159]
+m_out = delta[z_out_dom,int(N[1]/2),159]
+datos_in = np.array([z_in,m_in]).T
+np.savetxt('perfil_radio310.in',datos_in)
+datos_out = np.array([z_out,m_out]).T
+np.savetxt('perfil_radio310.out',datos_out)
+
+n_in = delta[z_in_dom,int(N[1]/2),162]
+n_out = delta[z_out_dom,int(N[1]/2),162]
+datos_in = np.array([z_in,n_in]).T
+np.savetxt('perfil_radio340.in',datos_in)
+datos_out = np.array([z_out,n_out]).T
+np.savetxt('perfil_radio340.out',datos_out)
+
+o_in = delta[z_in_dom,int(N[1]/2),165]
+o_out = delta[z_out_dom,int(N[1]/2),165]
+datos_in = np.array([z_in,a_in]).T
+np.savetxt('perfil_radio370.in',datos_in)
+datos_out = np.array([z_out,a_out]).T
+np.savetxt('perfil_radio370.out',datos_out)
+
+p_in = delta[z_in_dom,int(N[1]/2),167]
+p_out = delta[z_out_dom,int(N[1]/2),167]
+datos_in = np.array([z_in,p_in]).T
+np.savetxt('perfil_radio390.in',datos_in)
+datos_out = np.array([z_out,p_out]).T
+np.savetxt('perfil_radio390.out',datos_out)
+
+q_in = delta[z_in_dom,int(N[1]/2),170]
+q_out = delta[z_out_dom,int(N[1]/2),170]
+datos_in = np.array([z_in,q_in]).T
+np.savetxt('perfil_radio420.in',datos_in)
+datos_out = np.array([z_out,q_out]).T
+np.savetxt('perfil_radio420.out',datos_out)
+
+r_in = delta[z_in_dom,int(N[1]/2),172]
+r_out = delta[z_out_dom,int(N[1]/2),172]
+datos_in = np.array([z_in,r_in]).T
+np.savetxt('perfil_radio440.in',datos_in)
+datos_out = np.array([z_out,r_out]).T
+np.savetxt('perfil_radio440.out',datos_out)
+
+s_in = delta[z_in_dom,int(N[1]/2),175]
+s_out = delta[z_out_dom,int(N[1]/2),175]
+datos_in = np.array([z_in,s_in]).T
+np.savetxt('perfil_radio470.in',datos_in)
+datos_out = np.array([z_out,s_out]).T
+np.savetxt('perfil_radio470.out',datos_out)
+
+t_in = delta[z_in_dom,int(N[1]/2),178]
+t_out = delta[z_out_dom,int(N[1]/2),178]
+datos_in = np.array([z_in,t_in]).T
+np.savetxt('perfil_radio500.in',datos_in)
+datos_out = np.array([z_out,t_out]).T
+np.savetxt('perfil_radio500.out',datos_out)
+
+u_in = delta[z_in_dom,int(N[1]/2),180]
+u_out = delta[z_out_dom,int(N[1]/2),180]
+datos_in = np.array([z_in,u_in]).T
+np.savetxt('perfil_radio520.in',datos_in)
+datos_out = np.array([z_out,u_out]).T
+np.savetxt('perfil_radio520.out',datos_out)
+
+v_in = delta[z_in_dom,int(N[1]/2),183]
+v_out = delta[z_out_dom,int(N[1]/2),183]
+datos_in = np.array([z_in,v_in]).T
+np.savetxt('perfil_radio550.in',datos_in)
+datos_out = np.array([z_out,v_out]).T
+np.savetxt('perfil_radio550.out',datos_out)
+
+w_in = delta[z_in_dom,int(N[1]/2),185]
+w_out = delta[z_out_dom,int(N[1]/2),185]
+datos_in = np.array([z_in,w_in]).T
+np.savetxt('perfil_radio570.in',datos_in)
+datos_out = np.array([z_out,w_out]).T
+np.savetxt('perfil_radio570.out',datos_out)
+
+x_in = delta[z_in_dom,int(N[1]/2),188]
+x_out = delta[z_out_dom,int(N[1]/2),188]
+datos_in = np.array([z_in,x_in]).T
+np.savetxt('perfil_radio600.in',datos_in)
+datos_out = np.array([z_out,x_out]).T
+np.savetxt('perfil_radio600.out',datos_out)
+
+
+
+
 #%%
 #Agrego la seccion horrible para calcular los valores máximos y minimos de eta_in y eta_out
 
